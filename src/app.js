@@ -2,32 +2,39 @@ const express = require('express');
 
 const app = express();
 
-app.get("/user",(req,res)=>{
-    res.send({firstName:"Nishant",lastName:"Sharma"})
-});
+const {adminAuth,userAuth} = require("./middlewares/auth")
 
-app.put("/user",(req,res)=>{
-    res.send("data saved to database")
-});
+app.use("/admin",adminAuth);
 
-app.delete("/user",(req,res)=>{
-    res.send("deleted successfully")
-});
 
-app.get("/user",(req,res)=>{
-    res.send({firstName:"Nishant",lastName:"Sharma"})
-});
-app.use("/test",(req,res)=>{
-    res.send("hello from server");
+
+app.use("/user",userAuth);
+
+
+app.use("/user/getAllData",(req,res)=>{
+    //DB call
+    try{
+    throw new Error("juio");
+    
+    res.send("user data is found");
+
+    }
+    catch(err){
+        res.send("something wrong")
+    }
 })
 
-app.use("/home",(req,res)=>{
-    res.send("hello hello helloo!");
+app.use('/admin/getAllData',(req,res,next)=>{ 
+  
+        res.send("All data send");
+});
+
+app.use("/admin/deleteUser",(req,res,next)=>{
+       res.send("deleting user");
 })
 
-app.use("/",(req,res)=>{
-    res.send("hii my name is nishant");
-})
+
+
 
 
 app.listen(3000,()=>{
