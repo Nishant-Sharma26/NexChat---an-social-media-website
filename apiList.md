@@ -10,10 +10,9 @@ profileRouter
 -patch/profile/password
 
 connectionRequestRouter
--patch/request/send/interested/:userId
--patch/request/send/ignored/:userId
--post/requested/review/accepted/:requestId
--post/request/review/rejected/:requestId
+-patch/request/send/:status/:userId
+-post/requested/review/:status/:requestId
+
 
 userRouter
 -get/user/connections
