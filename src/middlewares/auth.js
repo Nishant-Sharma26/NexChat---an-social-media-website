@@ -6,7 +6,7 @@ const userAuth = async(req,res,next) =>{
      const cookies = req.cookies;
      const {token} = cookies;
      if(!token){
-        throw new Error("token is invalid please log in");
+        return res.status(400).send("invalid token please log In");
         
      }
     const decodedMessage = await jwt.verify(token,"NexChat@1817");
