@@ -5,23 +5,37 @@ const {validSignupData,validLoginData} = require("../utils/validation")
 const authRouter = express.Router();
 
 
-authRouter.post("/signup", async (req, res) => {
+authRouter.post("/login", async (req, res) => {
     try {
-      validSignupData(req);
-      const {firstName,lastName,emailId,password} = req.body;
-      
-      const passwordHash = await bcrypt.hash(password,10);
-     
-      const user = new User({
-          firstName,
-          lastName,
-          emailId,
-          password:passwordHash,
+      validLoginData(req);
+      const { emailId, password } = req.body;
+  
+      const user = await User.findOne({ emailId: emailId });
+      if (!user) {
+        throw new Error("invalid credentials");
+      }
+  
+      const isPasswordValid = await user.validatePassword(password);
+      if (!isPasswordValid) {
+        throw new Error("invalid credentials");
+      }
+  
+      const token = await user.getJWT();
+      res.cookie("token", token, { maxAge: 180000000, httpOnly: true }); 
+  
+    
+      res.status(200).json({
+        message: "log in successful",
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          emailId: user.emailId,
+          photoURL: user.photoURL,
+        
+        },
       });
-      await user.save();
-      res.send("user added successfully");
     } catch (err) {
-      res.send("Error :"+err.message);
+      res.status(400).send("Error: " + err.message);
     }
   });
   
