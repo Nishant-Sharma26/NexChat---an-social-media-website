@@ -68,7 +68,7 @@ requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=
         _id:requestId,
         toUserId:loggedInUser._id,
         status:"interested",
-    });
+    }); 
 
     if(!connectionRequest){
       throw new Error("the connection request does not exist");
