@@ -16,7 +16,13 @@ authRouter.post("/signup",async(req,res)=>{
             emailId,
             password:passwordHash,
         });
-        await user.save();
+        const savedUser = await user.save();
+        const token = await user.getJWT();
+        res.cookie("token", token, {
+            maxAge: 180000000, // ~2 days
+            httpOnly: true, // Prevent client-side access to cookie
+        });
+
         res.status(200).json({
           message: "Login successful",
           user: {
@@ -29,6 +35,7 @@ authRouter.post("/signup",async(req,res)=>{
               gender: user?.gender,
           },
       });
+
   
    }
    catch(err){
